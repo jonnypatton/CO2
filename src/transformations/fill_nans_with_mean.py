@@ -1,6 +1,9 @@
-import pandas as pd
 import logging
+
+import pandas as pd
+
 from src.utils.validation_utils import validate_no_nans
+
 
 def fill_nans_with_mean(df: pd.DataFrame, column_name: str) -> pd.DataFrame:
     """
@@ -29,14 +32,11 @@ def fill_nans_with_mean(df: pd.DataFrame, column_name: str) -> pd.DataFrame:
     if column_name not in df.columns:
         raise ValueError(f"Column '{column_name}' not found in DataFrame")
 
-    # Create an imputation flag column (False by default)
     imputed_column_name = f"{column_name}_imputed"
-    df[imputed_column_name] = df[column_name].isna()  # True where NaN exists
+    df[imputed_column_name] = df[column_name].isna()
 
-    # Perform linear interpolation
     df[column_name] = df[column_name].interpolate(method='linear', limit_direction='both')
 
-    # Convert to integer while preserving NaNs
     df[column_name] = df[column_name].round().astype('Int64')
 
     try:
@@ -45,6 +45,7 @@ def fill_nans_with_mean(df: pd.DataFrame, column_name: str) -> pd.DataFrame:
         logging.error(f"NaN validation failed after interpolation: {e}")
         raise
 
+    # noinspection PyUnreachableCode
     logging.info(f"Successfully filled NaN values in '{column_name}' using interpolation. Added column '{imputed_column_name}' to track imputed values.")
 
     return df

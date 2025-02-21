@@ -1,5 +1,7 @@
-import pandas as pd
 import logging
+
+import pandas as pd
+
 
 def convert_to_datetime(df: pd.DataFrame, column_name: str, timezone: str = "Europe/London") -> pd.DataFrame:
     """
@@ -24,7 +26,6 @@ def convert_to_datetime(df: pd.DataFrame, column_name: str, timezone: str = "Eur
 
     df[column_name] = pd.to_datetime(df[column_name], errors='coerce')
 
-    # Ensure timezone is properly set
     if df[column_name].dt.tz is None:
         df[column_name] = df[column_name].dt.tz_localize('UTC', ambiguous='NaT')
 

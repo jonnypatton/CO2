@@ -1,6 +1,8 @@
-import pandas as pd
 import logging
 from typing import NoReturn
+
+import pandas as pd
+
 
 def validate_no_nans(df: pd.DataFrame) -> NoReturn:
     """

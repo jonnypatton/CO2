@@ -1,8 +1,10 @@
-import matplotlib.pyplot as plt
-import seaborn as sns
-import pandas as pd
-from matplotlib.dates import DateFormatter
 import logging
+
+import matplotlib.pyplot as plt
+import pandas as pd
+import seaborn as sns
+from matplotlib.dates import DateFormatter
+
 
 def plot_co2_levels(df: pd.DataFrame, time_column: str = 'last_changed',
                     co2_column: str = 'state', ema_column: str = '15_point_ema') -> None:

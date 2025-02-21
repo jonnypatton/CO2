@@ -1,5 +1,6 @@
 import logging
 
+
 def setup_logging(level: int = logging.DEBUG) -> None:
     """
     Configures the logging for the application with the specified log level.
