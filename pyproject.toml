@@ -1,0 +1,28 @@
+[project]
+name = "co2"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.11"
+dependencies = [
+    "ipykernel>=6.29.5",
+    "isort>=6.0.0",
+    "jupyter-cache>=1.0.1",
+    "matplotlib>=3.10.0",
+    "nbstripout>=0.8.1",
+    "notebook>=7.3.2",
+    "pandas>=2.2.3",
+    "pytest>=8.3.4",
+    "seaborn>=0.13.2",
+    "uv>=0.6.2",
+]
+
+[tool.pytest.ini_options]
+pythonpaths = ["src"]
+
+[tool.isort]
+profile = "black"
+line_length = 120
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
