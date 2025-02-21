@@ -26,7 +26,7 @@ def fill_with_avg_before_after(series):
     return series
 
 # Reload the data
-df = pd.read_csv('history.csv')
+df = pd.read_csv('history (2).csv')
 
 # Convert 'last_changed' to datetime
 df['last_changed'] = pd.to_datetime(df['last_changed'], errors='coerce')
@@ -34,39 +34,55 @@ df['last_changed'] = pd.to_datetime(df['last_changed'], errors='coerce')
 # Convert 'state' to numeric, coercing text (e.g., "unavailable", "unknown") to NaN
 df['state'] = pd.to_numeric(df['state'], errors='coerce')
 
-# Sort by time (if not already sorted)
-df = df.sort_values(by='last_changed')
 
 # Fill NaN values (e.g., "unavailable", "unknown") with the average of previous and next valid values
 df['state'] = fill_with_avg_before_after(df['state'])
 
-# Drop any remaining NaN values (if any)
-df = df.dropna()
+# Calculate the 10-point EMA
+df['10_point_ema'] = df['state'].ewm(span=10, adjust=False).mean()
 
-# Filter out values over 1500 (if needed)
-# df = df[df['state'] <= 1500]
+# Determine whether to slice the data
+slice = int(input("Do you want to slice the data? (1 for Yes, 0 for No): "))
 
-# Calculate the 15-point EMA
-df['15_point_ema'] = df['state'].ewm(span=15, adjust=False).mean()
+if slice == 1:
+    # Ask the user for the range of data points to plot
+    start_index = int(input("Enter the starting row index (e.g., 800): "))
+    end_index = int(input("Enter the ending row index (e.g., 1000): "))
+    
+    # Slice the DataFrame based on user input
+    subset_df = df.iloc[start_index:end_index + 1]  # Add 1 to include the end index
+    plot_title = f'CO2 Levels (Rows {start_index} to {end_index})'
+else:
+    # Use the entire DataFrame
+    subset_df = df
+    plot_title = 'CO2 Levels (Full Dataset)'
 
-# Create the plot with hourly vertical lines
-plt.figure(figsize=(12, 6))
+# Dynamically adjust the plot size based on the number of data points
+num_points = len(subset_df)
+fig_width = min(30, max(12, num_points * 0.05))  # Cap the width at 30 inches
+fig_height = 6  # Fixed height
+
+# Create the plot with the dynamically adjusted size
+plt.figure(figsize=(fig_width, fig_height))
 
 # Light blue for CO2 levels line
-sns.lineplot(data=df, x='last_changed', y='state', label='CO2 Levels', color='lightblue')
+sns.lineplot(data=subset_df, x='last_changed', y='state', label='CO2 Levels', color='lightblue')
 
-# Dark blue for 15-point EMA line
-sns.lineplot(data=df, x='last_changed', y='15_point_ema', label='15-Point EMA', color='darkblue')
+# Dark blue for 10-point EMA line
+sns.lineplot(data=subset_df, x='last_changed', y='10_point_ema', label='10-Point EMA', color='darkblue')
 
 # Add hourly vertical lines
-for hour in pd.date_range(start=df['last_changed'].min().floor('h'), 
-                          end=df['last_changed'].max().ceil('h'), freq='h'):
+for hour in pd.date_range(start=subset_df['last_changed'].min().floor('h'), 
+                          end=subset_df['last_changed'].max().ceil('h'), freq='h'):
     plt.axvline(x=hour, color='gray', linestyle='--', alpha=0.5)
 
 # Format x-axis
 plt.gca().xaxis.set_major_formatter(DateFormatter('%H:%M'))
 
-plt.title('CO2 Levels Hourly')
+# Set x-axis limits to remove the gap
+plt.xlim(subset_df['last_changed'].min(), subset_df['last_changed'].max())
+
+plt.title(plot_title)
 plt.xlabel('Time (HH:MM)')
 plt.ylabel('CO2 Level (ppm)')
 plt.xticks(rotation=45)
