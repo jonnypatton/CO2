@@ -1,5 +1,7 @@
-import pandas as pd
 import logging
+
+import pandas as pd
+
 
 def add_ema_column(df: pd.DataFrame, column_name: str = 'state', ema_span: int = 15) -> pd.DataFrame:
     """

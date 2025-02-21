@@ -1,11 +1,13 @@
-import pandas as pd
 import logging
 
-from src.transformations.convert_to_numeric import convert_to_numeric
-from src.transformations.convert_to_datetime import convert_to_datetime
-from src.transformations.fill_nans_with_mean import fill_nans_with_mean
+import pandas as pd
+
 from src.transformations.add_ema_column import add_ema_column
+from src.transformations.convert_to_datetime import convert_to_datetime
+from src.transformations.convert_to_numeric import convert_to_numeric
+from src.transformations.fill_nans_with_mean import fill_nans_with_mean
 from src.transformations.rename_and_reorder_columns import rename_and_reorder_columns
+
 
 def transform_co2_data(df: pd.DataFrame) -> pd.DataFrame:
     """

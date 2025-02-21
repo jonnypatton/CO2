@@ -1,5 +1,7 @@
-import pandas as pd
 import logging
+
+import pandas as pd
+
 
 def write_csv_data(df: pd.DataFrame, file_path: str, encoding: str = "utf-8") -> None:
     """

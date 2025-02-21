@@ -1,6 +1,8 @@
-import pandas as pd
 import logging
 from typing import Optional
+
+import pandas as pd
+
 
 def load_co2_csv_data(file_path: str, delimiter: str = ",", encoding: str = "utf-8",
                       ) -> Optional[pd.DataFrame]:
